@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Location Finder</title>
+</head>
+<body style="font-family: Arial, sans-serif; padding: 20px;">
+  <h2>Your IP-Based Location:</h2>
+  <p id="ip-location">Fetching IP-based location...</p>
+
+  <h2>Your Exact Device Location:</h2>
+  <p id="device-location">Waiting for permission...</p>
+
+  <script>
+    // Get IP-based Location
+    fetch("https://ip-api.com/json/")
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("ip-location").innerText = 
+          IP Address: ${data.query}\nCity: ${data.city}\nRegion: ${data.regionName}\nCountry: ${data.country}\nLat: ${data.lat}, Lon: ${data.lon};
+      })
+      .catch(error => {
+        document.getElementById("ip-location").innerText = "Failed to fetch IP-based location.";
+      });
+
+    // Get Exact Device Location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          document.getElementById("device-location").innerText = 
+            Latitude: ${position.coords.latitude}\nLongitude: ${position.coords.longitude}\nAccuracy: ±${position.coords.accuracy} meters.;
+        },
+        error => {
+          document.getElementById("device-location").innerText = Error: ${error.message};
+        }
+      );
+    } else {
+      document.getElementById("device-location").innerText = "Geolocation not supported by this browser.";
+    }
+  </script>
+</body>
+</html>
